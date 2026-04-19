@@ -10,7 +10,7 @@ const { buildErrorEmbed } = require('../../utils/embed');
 const punishmentManager = require('../../features/capture/punishmentManager');
 const repo = require('../../storage/repositories/punishmentRepository');
 
-const MAX_DURATION_MS = 7 * 24 * 60 * 60 * 1_000; // 7 days
+const MAX_DURATION_MS = 5 * 60 * 1_000; // 7 days
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,7 +23,7 @@ module.exports = {
       opt
         .setName('type')
         .setDescription('The punishment type to apply')
-        .setRequired(true)
+        .setRequired(false)
         .addChoices(
           { name: '⚡ Shock – roleplay electric shock (visual only)', value: 'shock' },
           { name: '🔒 Prison – confined to the prison channel', value: 'prison' },
@@ -34,7 +34,7 @@ module.exports = {
       opt
         .setName('duration')
         .setDescription('How long the punishment lasts (e.g. 10m, 2h, 1d)')
-        .setRequired(true),
+        .setRequired(false),
     ),
 
   async execute(interaction, client) {
