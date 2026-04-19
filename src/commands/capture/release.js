@@ -4,10 +4,11 @@ const { SlashCommandBuilder } = require('discord.js');
 const { handleCommandError } = require('../../middleware/errorHandler');
 const { buildErrorEmbed, buildRestorationEmbed } = require('../../utils/embed');
 const punishmentManager = require('../../features/capture/punishmentManager');
+const config = require('../../core/config');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('release')
+    .setName(config.localization.commandNames.release)
     .setDescription('Manually release a captured user before their punishment expires.')
     .addUserOption(opt =>
       opt.setName('target').setDescription('The user to release').setRequired(true),

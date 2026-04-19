@@ -8,12 +8,12 @@ A Discord bot with a **roleplay punishment / capture** system and extendable med
 
 | Feature | Description |
 |---|---|
-| `/capture @user <type> <duration>` | Capture a user and apply shock / prison / isolation |
-| `/release @user` | Manually release a captured user early |
-| `/punishment-status @user` | Check remaining punishment time |
-| `/hug @user` | Send a hug GIF |
-| `/shock @user` | Send a shock GIF (visual-only, no permission changes; name can be changed) |
-| `/action <type> @user` | Generic GIF action (autocomplete from `config/media.json`) |
+| `/batcoc @user <duration> [type]` | Capture a user and apply chichdien / nhottu / colap |
+| `/thatu @user` | Manually release a captured user early |
+| `/trangthaiphat @user` | Check remaining punishment time |
+| `/om @user` | Send a hug GIF |
+| `/chichdien @user` | Send a shock GIF (visual-only, no permission changes; name can be changed) |
+| `/hanhdong <type> @user` | Generic GIF action (autocomplete + alias from `config/settings.json`) |
 
 ### Punishment modes
 
@@ -86,8 +86,10 @@ npm run dev
 | `GUILD_ID` | optional | Register commands to a single guild for instant dev updates |
 | `CAPTOR_ROLE_IDS` | optional | Legacy setting (capture commands are now open to everyone) |
 | `IMMUNE_ROLE_IDS` | optional | Legacy setting (all members can now be targeted) |
-| `SHOCK_COMMAND_NAME` | optional | Slash command name for shock media command (example: `chichdien`) |
+| `SHOCK_COMMAND_NAME` | optional | Slash command name for shock media command (default: `chichdien`) |
 | `CAPTURE_SUCCESS_RATE` | optional | Success rate for prison/isolation capture roll (`0..1`, default `0.25`) |
+| `DEFAULT_CAPTURE_TYPE` | optional | Default type for `/batcoc` when `type` is omitted (default: `shock`) |
+| `CAPTURE_DEFAULT_DURATION` | optional | Default duration for `/batcoc` when `duration` is omitted (default: `10m`) |
 | `AUDIT_CHANNEL_ID` | optional | Channel ID where punishment actions are logged |
 | `DB_PATH` | optional | Path to the SQLite file (default: `./data/bot.db`) |
 | `LOG_LEVEL` | optional | `error` / `warn` / `info` / `debug` (default: `info`) |
@@ -99,8 +101,13 @@ npm run dev
 | `prisonChannelName` | `"prison"` | Name of the auto-created prison channel |
 | `reconciliationIntervalMinutes` | `5` | How often the reconciliation cron runs |
 | `commandCooldownSeconds` | `3` | Per-user command cooldown in seconds |
-| `shockCommandName` | `"shock"` | Shock slash-command name (overridden by `SHOCK_COMMAND_NAME`) |
+| `shockCommandName` | `"chichdien"` | Shock slash-command name (overridden by `SHOCK_COMMAND_NAME`) |
 | `captureSuccessRate` | `0.25` | Success rate for prison/isolation capture roll (overridden by `CAPTURE_SUCCESS_RATE`) |
+| `captureDefaultDuration` | `"10m"` | Default duration used when capture duration is omitted |
+| `localization.commandNames` | see settings | Custom slash command names (Vietnamese or any custom naming) |
+| `localization.punishmentTypes` | see settings | Custom labels for punishment types in UI/embed |
+| `localization.mediaAliases` | see settings | Alias map for `/hanhdong` type (example: `var` -> `slap`) |
+| `localization.defaultCaptureType` | `"shock"` | Default capture type when `type` is omitted |
 
 ### `config/media.json`
 
@@ -115,13 +122,13 @@ Add GIF URLs per action key. The bot picks one at random on each use.
 }
 ```
 
-Any key you add here is automatically available as an option in `/action <type>`.
+Any key you add here is automatically available as an option in `/hanhdong <type>`.
 
-### Rename `/shock` command (example: `/chichdien`)
+### Customize command/action localization
 
-1. Set `SHOCK_COMMAND_NAME=chichdien` in `.env` (or `shockCommandName` in `config/settings.json`).
-2. Run `npm run deploy` to re-register slash commands.
-3. Use the new command name in Discord.
+1. Edit `config/settings.json` in the `localization` block to rename commands, punishment labels, and action aliases.
+2. Optional env overrides: `SHOCK_COMMAND_NAME`, `DEFAULT_CAPTURE_TYPE`, `CAPTURE_DEFAULT_DURATION`.
+3. Run `npm run deploy` to re-register slash commands.
 
 ---
 

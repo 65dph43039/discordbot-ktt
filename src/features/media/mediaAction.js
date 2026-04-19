@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const config = require('../../core/config');
 
 const mediaPath = path.join(__dirname, '../../../config/media.json');
 
@@ -23,7 +24,8 @@ try {
  * @returns {string|null}
  */
 function getRandomGif(action) {
-  const gifs = media[action];
+  const normalized = normalizeAction(action);
+  const gifs = media[normalized];
   if (!Array.isArray(gifs) || gifs.length === 0) return null;
   return gifs[Math.floor(Math.random() * gifs.length)];
 }
@@ -34,7 +36,17 @@ function getRandomGif(action) {
  * @returns {string[]}
  */
 function listActions() {
-  return Object.keys(media).filter(k => Array.isArray(media[k]) && media[k].length > 0);
+  const baseActions = Object.keys(media).filter(k => Array.isArray(media[k]) && media[k].length > 0);
+  const aliases = Object.entries(config.localization?.mediaAliases ?? {})
+    .filter(([, target]) => baseActions.includes(target))
+    .map(([alias]) => alias);
+  return [...new Set([...baseActions, ...aliases])];
+}
+
+function normalizeAction(action) {
+  const raw = String(action || '').trim().toLowerCase();
+  if (!raw) return raw;
+  return config.localization?.mediaAliases?.[raw] || raw;
 }
 
 module.exports = { getRandomGif, listActions };

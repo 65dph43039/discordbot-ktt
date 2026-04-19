@@ -5,10 +5,11 @@ const { checkCooldown } = require('../../middleware/cooldown');
 const { handleCommandError } = require('../../middleware/errorHandler');
 const { buildMediaEmbed, buildErrorEmbed } = require('../../utils/embed');
 const mediaAction = require('../../features/media/mediaAction');
+const config = require('../../core/config');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('hug')
+    .setName(config.localization.commandNames.hug)
     .setDescription('Send a warm hug to another server member. 🤗')
     .addUserOption(opt =>
       opt.setName('target').setDescription('The user to hug').setRequired(true),

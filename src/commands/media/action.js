@@ -5,6 +5,7 @@ const { checkCooldown } = require('../../middleware/cooldown');
 const { handleCommandError } = require('../../middleware/errorHandler');
 const { buildMediaEmbed, buildErrorEmbed } = require('../../utils/embed');
 const mediaAction = require('../../features/media/mediaAction');
+const config = require('../../core/config');
 
 /**
  * Generic /action command – lets users trigger any GIF action defined in config/media.json.
@@ -12,7 +13,7 @@ const mediaAction = require('../../features/media/mediaAction');
  */
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('action')
+    .setName(config.localization.commandNames.action)
     .setDescription('Trigger a roleplay action GIF (e.g. hug, pat, poke).')
     .addStringOption(opt =>
       opt

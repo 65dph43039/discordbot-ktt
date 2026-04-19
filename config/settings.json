@@ -1,5 +1,29 @@
 {
   "prisonChannelName": "prison",
   "reconciliationIntervalMinutes": 5,
-  "commandCooldownSeconds": 3
+  "commandCooldownSeconds": 3,
+  "captureDefaultDuration": "10m",
+  "localization": {
+    "commandNames": {
+      "capture": "batcoc",
+      "release": "thatu",
+      "punishmentStatus": "trangthaiphat",
+      "action": "hanhdong",
+      "hug": "om",
+      "shock": "chichdien"
+    },
+    "punishmentTypes": {
+      "shock": "chichdien",
+      "prison": "nhottu",
+      "isolation": "colap"
+    },
+    "mediaAliases": {
+      "om": "hug",
+      "var": "slap",
+      "chichdien": "shock",
+      "nhottu": "prison",
+      "colap": "isolation"
+    },
+    "defaultCaptureType": "shock"
+  }
 }

@@ -9,15 +9,22 @@ const config = require('../../core/config');
 const { buildErrorEmbed } = require('../../utils/embed');
 const punishmentManager = require('../../features/capture/punishmentManager');
 const repo = require('../../storage/repositories/punishmentRepository');
+const effectRegistry = require('../../features/capture/effectRegistry');
 
-const MAX_DURATION_MS = 5 * 60 * 1_000; // 7 days
+const MAX_DURATION_MS = 7 * 24 * 60 * 60 * 1_000; // 7 days
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('capture')
+    .setName(config.localization.commandNames.capture)
     .setDescription('Capture a user and apply a roleplay punishment.')
     .addUserOption(opt =>
       opt.setName('target').setDescription('The user to capture').setRequired(true),
+    )
+    .addStringOption(opt =>
+      opt
+        .setName('duration')
+        .setDescription('How long the punishment lasts (e.g. 10m, 2h, 1d)')
+        .setRequired(false),
     )
     .addStringOption(opt =>
       opt
@@ -25,16 +32,19 @@ module.exports = {
         .setDescription('The punishment type to apply')
         .setRequired(false)
         .addChoices(
-          { name: '⚡ Shock – roleplay electric shock (visual only)', value: 'shock' },
-          { name: '🔒 Prison – confined to the prison channel', value: 'prison' },
-          { name: '🔇 Isolation – can see but not send messages', value: 'isolation' },
+          {
+            name: `⚡ ${config.localization.punishmentTypes.shock} – roleplay electric shock (visual only)`,
+            value: 'shock',
+          },
+          {
+            name: `🔒 ${config.localization.punishmentTypes.prison} – confined to the prison channel`,
+            value: 'prison',
+          },
+          {
+            name: `🔇 ${config.localization.punishmentTypes.isolation} – can see but not send messages`,
+            value: 'isolation',
+          },
         ),
-    )
-    .addStringOption(opt =>
-      opt
-        .setName('duration')
-        .setDescription('How long the punishment lasts (e.g. 10m, 2h, 1d)')
-        .setRequired(false),
     ),
 
   async execute(interaction, client) {
@@ -48,8 +58,15 @@ module.exports = {
       if (!await checkCooldown(interaction, 'capture')) return;
 
       const targetUser = interaction.options.getUser('target');
-      const type = interaction.options.getString('type');
-      const durationStr = interaction.options.getString('duration');
+      const type = interaction.options.getString('type') || config.localization.defaultCaptureType;
+      const durationStr = interaction.options.getString('duration') || config.captureDefaultDuration;
+
+      if (!effectRegistry.list().includes(type)) {
+        return interaction.reply({
+          embeds: [buildErrorEmbed(`Invalid capture type: **${type}**. Please check localization config.`)],
+          ephemeral: true,
+        });
+      }
 
       // Validate duration
       const durationMs = parseDuration(durationStr);

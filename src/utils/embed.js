@@ -1,6 +1,7 @@
 'use strict';
 
 const { EmbedBuilder, Colors } = require('discord.js');
+const config = require('../core/config');
 
 const PUNISHMENT_COLORS = {
   shock: Colors.Yellow,
@@ -12,10 +13,11 @@ const PUNISHMENT_COLORS = {
  * Build an embed announcing a punishment has been applied.
  */
 function buildPunishmentEmbed({ type, target, actor, duration, description }) {
+  const localizedType = localizePunishmentType(type);
   return new EmbedBuilder()
     .setColor(PUNISHMENT_COLORS[type] ?? Colors.Blue)
-    .setTitle(`⚠️ ${capitalize(type)} applied`)
-    .setDescription(description ?? `**${target}** has been subjected to **${type}**.`)
+    .setTitle(`⚠️ ${capitalize(localizedType)} applied`)
+    .setDescription(description ?? `**${target}** has been subjected to **${localizedType}**.`)
     .addFields(
       { name: 'Target', value: target, inline: true },
       { name: 'By', value: actor, inline: true },
@@ -28,10 +30,11 @@ function buildPunishmentEmbed({ type, target, actor, duration, description }) {
  * Build an embed announcing a punishment has expired / been removed.
  */
 function buildRestorationEmbed({ type, target }) {
+  const localizedType = localizePunishmentType(type);
   return new EmbedBuilder()
     .setColor(Colors.Green)
-    .setTitle(`✅ ${capitalize(type)} expired`)
-    .setDescription(`**${target}** has been released from **${type}**.`)
+    .setTitle(`✅ ${capitalize(localizedType)} expired`)
+    .setDescription(`**${target}** has been released from **${localizedType}**.`)
     .setTimestamp();
 }
 
@@ -57,6 +60,10 @@ function buildErrorEmbed(message) {
 function capitalize(str) {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function localizePunishmentType(type) {
+  return config.localization?.punishmentTypes?.[type] || type;
 }
 
 module.exports = {
