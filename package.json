@@ -1,0 +1,26 @@
+{
+  "name": "discordbot-ktt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/index.js",
+    "deploy-commands": "node src/deploy-commands.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/65dph43039/discordbot-ktt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/65dph43039/discordbot-ktt/issues"
+  },
+  "homepage": "https://github.com/65dph43039/discordbot-ktt#readme",
+  "dependencies": {
+    "discord.js": "^14.26.3"
+  }
+}
