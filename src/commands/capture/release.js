@@ -1,7 +1,6 @@
 'use strict';
 
 const { SlashCommandBuilder } = require('discord.js');
-const { requireCaptor } = require('../../middleware/authorization');
 const { handleCommandError } = require('../../middleware/errorHandler');
 const { buildErrorEmbed, buildRestorationEmbed } = require('../../utils/embed');
 const punishmentManager = require('../../features/capture/punishmentManager');
@@ -16,7 +15,12 @@ module.exports = {
 
   async execute(interaction, client) {
     try {
-      if (!await requireCaptor(interaction)) return;
+      if (!interaction.guild) {
+        return interaction.reply({
+          embeds: [buildErrorEmbed('This command can only be used inside a server.')],
+          ephemeral: true,
+        });
+      }
 
       const targetUser = interaction.options.getUser('target');
       await interaction.deferReply();

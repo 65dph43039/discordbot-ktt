@@ -5,10 +5,11 @@ const { checkCooldown } = require('../../middleware/cooldown');
 const { handleCommandError } = require('../../middleware/errorHandler');
 const { buildMediaEmbed, buildErrorEmbed } = require('../../utils/embed');
 const mediaAction = require('../../features/media/mediaAction');
+const config = require('../../core/config');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('shock')
+    .setName(config.shockCommandName)
     .setDescription('Zap another user with an electric shock! ⚡')
     .addUserOption(opt =>
       opt.setName('target').setDescription('The user to shock').setRequired(true),

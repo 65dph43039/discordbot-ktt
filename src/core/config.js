@@ -15,6 +15,13 @@ try {
   // settings.json is optional
 }
 
+function parseProbability(value, fallback) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  if (parsed < 0 || parsed > 1) return fallback;
+  return parsed;
+}
+
 const config = {
   token: process.env.DISCORD_TOKEN,
   clientId: process.env.CLIENT_ID,
@@ -25,6 +32,10 @@ const config = {
   captorRoleIds: (process.env.CAPTOR_ROLE_IDS || '').split(',').filter(Boolean),
   /** Comma-separated role IDs that cannot be captured (admins are always immune). */
   immuneRoleIds: (process.env.IMMUNE_ROLE_IDS || '').split(',').filter(Boolean),
+  /** Slash command name for the media shock command. */
+  shockCommandName: process.env.SHOCK_COMMAND_NAME || 'shock',
+  /** Success probability for capture attempts that apply prison/isolation. */
+  captureSuccessRate: parseProbability(process.env.CAPTURE_SUCCESS_RATE, 0.25),
   /** Channel ID for audit log messages. */
   auditChannelId: process.env.AUDIT_CHANNEL_ID || null,
   prisonChannelName: 'prison',

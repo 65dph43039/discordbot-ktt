@@ -1,11 +1,11 @@
 'use strict';
 
 const { SlashCommandBuilder } = require('discord.js');
-const { requireCaptor } = require('../../middleware/authorization');
 const { checkCooldown } = require('../../middleware/cooldown');
 const { handleCommandError } = require('../../middleware/errorHandler');
 const { canTarget } = require('../../services/permissionService');
 const { parseDuration } = require('../../utils/duration');
+const config = require('../../core/config');
 const { buildErrorEmbed } = require('../../utils/embed');
 const punishmentManager = require('../../features/capture/punishmentManager');
 const repo = require('../../storage/repositories/punishmentRepository');
@@ -39,7 +39,12 @@ module.exports = {
 
   async execute(interaction, client) {
     try {
-      if (!await requireCaptor(interaction)) return;
+      if (!interaction.guild) {
+        return interaction.reply({
+          embeds: [buildErrorEmbed('This command can only be used inside a server.')],
+          ephemeral: true,
+        });
+      }
       if (!await checkCooldown(interaction, 'capture')) return;
 
       const targetUser = interaction.options.getUser('target');
@@ -81,6 +86,14 @@ module.exports = {
       if (existing) {
         return interaction.reply({
           embeds: [buildErrorEmbed(`<@${target.id}> is already captured (**${existing.type}**). Release them first.`)],
+          ephemeral: true,
+        });
+      }
+
+      const requiresCaptureRoll = type === 'prison' || type === 'isolation';
+      if (requiresCaptureRoll && Math.random() >= config.captureSuccessRate) {
+        return interaction.reply({
+          embeds: [buildErrorEmbed(`Capture failed. You can only use **${type}** after a successful capture.`)],
           ephemeral: true,
         });
       }
