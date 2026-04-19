@@ -1,0 +1,26 @@
+{
+  "_comment": "Add direct GIF URLs for each action key. The bot picks one at random. Replace the placeholder URLs with real GIF links.",
+  "hug": [
+    "https://media.tenor.com/6NbShMa7CesAAAAC/hug.gif",
+    "https://media.tenor.com/0is_WmtBFdYAAAAC/anime-hug.gif"
+  ],
+  "shock": [
+    "https://media.tenor.com/N2ImMjKTHFgAAAAC/electric-shock-shocked.gif",
+    "https://media.tenor.com/RQBbsZpSY4UAAAAC/electric-shock.gif"
+  ],
+  "prison": [
+    "https://media.tenor.com/4l4oVRuRJlAAAAAC/jail-arrested.gif"
+  ],
+  "isolation": [
+    "https://media.tenor.com/zLcPfzHiHysAAAAC/anime-alone.gif"
+  ],
+  "slap": [
+    "https://media.tenor.com/UrSp3vZEeSEAAAAC/anime-slap.gif"
+  ],
+  "pat": [
+    "https://media.tenor.com/5WfegBvIb-IAAAAC/anime-head-pat.gif"
+  ],
+  "poke": [
+    "https://media.tenor.com/7v7dCYQZeZsAAAAC/poke-anime.gif"
+  ]
+}
