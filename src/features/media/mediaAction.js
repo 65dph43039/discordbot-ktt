@@ -49,4 +49,4 @@ function normalizeAction(action) {
   return config.localization?.mediaAliases?.[raw] || raw;
 }
 
-module.exports = { getRandomGif, listActions };
+module.exports = { getRandomGif, listActions, normalizeAction };

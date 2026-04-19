@@ -8,7 +8,7 @@ A Discord bot with a **roleplay punishment / capture** system and extendable med
 
 | Feature | Description |
 |---|---|
-| `/batcoc @user <duration> [type]` | Capture a user and apply chichdien / nhottu / colap |
+| `/batcoc @user [duration] [type]` | Capture a user and apply chichdien / nhottu / colap |
 | `/thatu @user` | Manually release a captured user early |
 | `/trangthaiphat @user` | Check remaining punishment time |
 | `/om @user` | Send a hug GIF |

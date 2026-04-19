@@ -58,8 +58,8 @@ module.exports = {
       if (!await checkCooldown(interaction, 'capture')) return;
 
       const targetUser = interaction.options.getUser('target');
-      const type = interaction.options.getString('type') || config.localization.defaultCaptureType;
-      const durationStr = interaction.options.getString('duration') || config.captureDefaultDuration;
+      const type = interaction.options.getString('type') ?? config.localization.defaultCaptureType;
+      const durationStr = interaction.options.getString('duration') ?? config.captureDefaultDuration;
 
       if (!effectRegistry.list().includes(type)) {
         return interaction.reply({
