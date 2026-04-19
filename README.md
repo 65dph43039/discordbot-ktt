@@ -12,7 +12,7 @@ A Discord bot with a **roleplay punishment / capture** system and extendable med
 | `/release @user` | Manually release a captured user early |
 | `/punishment-status @user` | Check remaining punishment time |
 | `/hug @user` | Send a hug GIF |
-| `/shock @user` | Send a shock GIF (visual-only, no permission changes) |
+| `/shock @user` | Send a shock GIF (visual-only, no permission changes; name can be changed) |
 | `/action <type> @user` | Generic GIF action (autocomplete from `config/media.json`) |
 
 ### Punishment modes
@@ -20,8 +20,8 @@ A Discord bot with a **roleplay punishment / capture** system and extendable med
 | Mode | Effect |
 |---|---|
 | `shock` | Roleplay-only message + GIF – no permission changes |
-| `prison` | Target can only see and write in the auto-created **#prison** channel |
-| `isolation` | Target can see all channels but cannot send messages or use slash commands |
+| `prison` | Target can only see and write in the auto-created **#prison** channel (requires successful capture roll) |
+| `isolation` | Target can see all channels but cannot send messages or use slash commands (requires successful capture roll) |
 
 All punishments **automatically expire** after the specified duration and restore the member's original access. Timers survive bot restarts via SQLite persistence and a startup-recovery mechanism.
 
@@ -84,8 +84,10 @@ npm run dev
 | `DISCORD_TOKEN` | ✅ | Bot token from the [Developer Portal](https://discord.com/developers/applications) |
 | `CLIENT_ID` | ✅ | Application (client) ID |
 | `GUILD_ID` | optional | Register commands to a single guild for instant dev updates |
-| `CAPTOR_ROLE_IDS` | optional | Comma-separated role IDs allowed to use capture commands |
-| `IMMUNE_ROLE_IDS` | optional | Comma-separated role IDs that cannot be captured |
+| `CAPTOR_ROLE_IDS` | optional | Legacy setting (capture commands are now open to everyone) |
+| `IMMUNE_ROLE_IDS` | optional | Legacy setting (all members can now be targeted) |
+| `SHOCK_COMMAND_NAME` | optional | Slash command name for shock media command (example: `chichdien`) |
+| `CAPTURE_SUCCESS_RATE` | optional | Success rate for prison/isolation capture roll (`0..1`, default `0.25`) |
 | `AUDIT_CHANNEL_ID` | optional | Channel ID where punishment actions are logged |
 | `DB_PATH` | optional | Path to the SQLite file (default: `./data/bot.db`) |
 | `LOG_LEVEL` | optional | `error` / `warn` / `info` / `debug` (default: `info`) |
@@ -97,6 +99,8 @@ npm run dev
 | `prisonChannelName` | `"prison"` | Name of the auto-created prison channel |
 | `reconciliationIntervalMinutes` | `5` | How often the reconciliation cron runs |
 | `commandCooldownSeconds` | `3` | Per-user command cooldown in seconds |
+| `shockCommandName` | `"shock"` | Shock slash-command name (overridden by `SHOCK_COMMAND_NAME`) |
+| `captureSuccessRate` | `0.25` | Success rate for prison/isolation capture roll (overridden by `CAPTURE_SUCCESS_RATE`) |
 
 ### `config/media.json`
 
@@ -112,6 +116,12 @@ Add GIF URLs per action key. The bot picks one at random on each use.
 ```
 
 Any key you add here is automatically available as an option in `/action <type>`.
+
+### Rename `/shock` command (example: `/chichdien`)
+
+1. Set `SHOCK_COMMAND_NAME=chichdien` in `.env` (or `shockCommandName` in `config/settings.json`).
+2. Run `npm run deploy` to re-register slash commands.
+3. Use the new command name in Discord.
 
 ---
 

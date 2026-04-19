@@ -1,7 +1,5 @@
 'use strict';
 
-const config = require('../core/config');
-
 /**
  * Returns true if the guild member is allowed to use capture commands.
  * Admins and the guild owner always qualify, regardless of config.
@@ -10,10 +8,7 @@ const config = require('../core/config');
  */
 function isCaptor(member) {
   if (!member) return false;
-  if (member.id === member.guild.ownerId) return true;
-  if (member.permissions.has('Administrator')) return true;
-  if (config.captorRoleIds.some(id => member.roles.cache.has(id))) return true;
-  return false;
+  return true;
 }
 
 /**
@@ -24,9 +19,6 @@ function isCaptor(member) {
  */
 function isImmune(member) {
   if (!member) return false;
-  if (member.id === member.guild.ownerId) return true;
-  if (member.permissions.has('Administrator')) return true;
-  if (config.immuneRoleIds.some(id => member.roles.cache.has(id))) return true;
   return false;
 }
 
