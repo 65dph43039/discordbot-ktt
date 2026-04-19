@@ -119,7 +119,8 @@ async function removeAllOverwrites(guild, member) {
   await guild.channels.fetch();
   const promises = [];
   for (const channel of guild.channels.cache.values()) {
-    const overwrite = channel.permissionOverwrites.cache.get(member.id);
+    // Thread channels do not have their own permissionOverwrites – skip them.
+    const overwrite = channel.permissionOverwrites?.cache?.get(member.id);
     if (overwrite) {
       promises.push(overwrite.delete('Punishment expired').catch(() => {}));
     }
