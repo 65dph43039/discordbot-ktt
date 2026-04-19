@@ -193,20 +193,23 @@ class PunishmentService {
           };
 
     const channels = member.guild.channels.cache.filter((channel) => channel.permissionOverwrites);
-    for (const channel of channels.values()) {
-      if (channel.id === restrictedChannelId) {
-        await channel.permissionOverwrites.edit(member.id, allowInRestrictedChannel);
-      } else {
-        await channel.permissionOverwrites.edit(member.id, denyInAllChannels);
-      }
-    }
+    await Promise.all(
+      channels.map((channel) =>
+        channel.id === restrictedChannelId
+          ? channel.permissionOverwrites.edit(member.id, allowInRestrictedChannel)
+          : channel.permissionOverwrites.edit(member.id, denyInAllChannels)
+      )
+    );
   }
 
   async restoreChannelRestrictions(guild, userId, snapshot, reason) {
-    for (const item of snapshot) {
+    const restorationPromises = snapshot.map(async (item) => {
       const channel = guild.channels.cache.get(item.channelId);
       if (!channel || !channel.permissionOverwrites) {
-        continue;
+        console.warn(
+          `Skipping restore for missing or unsupported channel ${item.channelId} in guild ${guild.id}`
+        );
+        return;
       }
 
       const existingWithoutUser = channel.permissionOverwrites.cache
@@ -228,7 +231,9 @@ class PunishmentService {
       }
 
       await channel.permissionOverwrites.set(existingWithoutUser, reason);
-    }
+    });
+
+    await Promise.allSettled(restorationPromises);
   }
 
   scheduleRelease(key) {
@@ -239,16 +244,23 @@ class PunishmentService {
 
     const remainingMs = punishment.expiresAt - Date.now();
     if (remainingMs <= 0) {
-      this.releasePunishmentByKey(key, 'Timer expired').catch(() => {});
+      this.releasePunishmentByKey(key, 'Timer expired').catch((error) => {
+        console.error(`Failed to auto-release punishment ${key}`, error);
+      });
       return;
     }
 
-    const maxTimeout = 2_147_483_647;
-    const timeoutMs = Math.min(remainingMs, maxTimeout);
+    // setTimeout uses a signed 32-bit millisecond delay; larger values are clamped by JS runtimes.
+    const MAX_TIMEOUT_MS = 2_147_483_647;
+    const timeoutMs = Math.min(remainingMs, MAX_TIMEOUT_MS);
 
     const timer = setTimeout(async () => {
       if (timeoutMs === remainingMs) {
-        await this.releasePunishmentByKey(key, 'Timer expired');
+        try {
+          await this.releasePunishmentByKey(key, 'Timer expired');
+        } catch (error) {
+          console.error(`Failed to auto-release punishment ${key}`, error);
+        }
       } else {
         this.scheduleRelease(key);
       }

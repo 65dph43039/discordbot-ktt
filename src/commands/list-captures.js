@@ -20,7 +20,7 @@ module.exports = {
     }
 
     const lines = captures.map((capture) => {
-      const remaining = Math.max(1, Math.floor((capture.expiresAt - Date.now()) / 1000));
+      const remaining = Math.max(0, Math.floor((capture.expiresAt - Date.now()) / 1000));
       return `• <@${capture.userId}> - **${capture.mode}** (${remaining}s left)`;
     });
 

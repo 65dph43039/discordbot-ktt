@@ -1,7 +1,9 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
-async function ensureFile(filePath) {
+const DEFAULT_PUNISHMENT_DATA = { punishments: [] };
+
+async function ensureFile(filePath, defaultContent = DEFAULT_PUNISHMENT_DATA) {
   const absolutePath = path.resolve(filePath);
   const dirPath = path.dirname(absolutePath);
 
@@ -10,7 +12,7 @@ async function ensureFile(filePath) {
   try {
     await fs.access(absolutePath);
   } catch {
-    await fs.writeFile(absolutePath, JSON.stringify({ punishments: [] }, null, 2));
+    await fs.writeFile(absolutePath, JSON.stringify(defaultContent, null, 2));
   }
 
   return absolutePath;
@@ -24,7 +26,7 @@ async function readJson(filePath) {
 }
 
 async function writeJson(filePath, payload) {
-  const absolutePath = await ensureFile(filePath);
+  const absolutePath = await ensureFile(filePath, payload);
   await fs.writeFile(absolutePath, JSON.stringify(payload, null, 2));
 }
 

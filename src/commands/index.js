@@ -12,7 +12,7 @@ function loadCommands() {
     const command = require(path.join(commandsPath, file));
 
     if (!command.data || !command.execute) {
-      throw new Error(`Invalid command module: ${file}`);
+      throw new Error(`Command module ${file} is missing required data or execute property`);
     }
 
     commands.set(command.data.name, command);
