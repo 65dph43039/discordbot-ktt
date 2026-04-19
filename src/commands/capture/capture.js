@@ -90,8 +90,8 @@ module.exports = {
         });
       }
 
-      const needsSuccessfulCapture = type === 'prison' || type === 'isolation';
-      if (needsSuccessfulCapture && Math.random() >= config.captureSuccessRate) {
+      const requiresCaptureRoll = type === 'prison' || type === 'isolation';
+      if (requiresCaptureRoll && Math.random() >= config.captureSuccessRate) {
         return interaction.reply({
           embeds: [buildErrorEmbed(`Capture failed. You can only use **${type}** after a successful capture.`)],
           ephemeral: true,
