@@ -1,0 +1,5 @@
+{
+  "prisonChannelName": "prison",
+  "reconciliationIntervalMinutes": 5,
+  "commandCooldownSeconds": 3
+}
