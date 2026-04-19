@@ -44,7 +44,7 @@ function listActions() {
 }
 
 function normalizeAction(action) {
-  const raw = String(action || '').trim().toLowerCase();
+  const raw = String(action ?? '').trim().toLowerCase();
   if (!raw) return raw;
   return config.localization?.mediaAliases?.[raw] || raw;
 }

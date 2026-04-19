@@ -22,12 +22,6 @@ module.exports = {
     )
     .addStringOption(opt =>
       opt
-        .setName('duration')
-        .setDescription('How long the punishment lasts (e.g. 10m, 2h, 1d)')
-        .setRequired(false),
-    )
-    .addStringOption(opt =>
-      opt
         .setName('type')
         .setDescription('The punishment type to apply')
         .setRequired(false)
@@ -45,6 +39,12 @@ module.exports = {
             value: 'isolation',
           },
         ),
+    )
+    .addStringOption(opt =>
+      opt
+        .setName('duration')
+        .setDescription('How long the punishment lasts (e.g. 10m, 2h, 1d)')
+        .setRequired(false),
     ),
 
   async execute(interaction, client) {
